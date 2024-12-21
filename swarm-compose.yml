@@ -1,0 +1,41 @@
+# swarm fetched images from regitry either local or public/private
+services:
+  lms-web:
+    image: 127.0.0.1:5001/spworkspace22/lms-app:v1
+    ports:
+      - "5000:5000"
+    container_name: lms-web # Depreciated
+    depends_on:
+      - lms-db
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  lms-db:
+    image: 127.0.0.1:5001/spworkspace22/mysql:8.0 # fetchinng from private registry
+    container_name: lmd-db # it is depreciated
+    configs:
+      - source: lms
+        target: /docker-entrypoint-initdb.d/lms.sql
+      #volumes:
+      #- "./db/lms.sql:/docker-entrypoint-initdb.d/lms.sql"
+    environment:
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db_pass
+      - MYSQL_DATABASE=lms
+    secrets:
+      - db_pass
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    deploy:
+      mode: replicated
+      replicas: 1
+
+configs:
+  lms:
+    external: true
+
+secrets:
+  db_pass:
+    external: true  # This assumes the secret is already created externally
