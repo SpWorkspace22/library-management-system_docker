@@ -1,0 +1,31 @@
+services:
+  lms-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      no_cache: true
+    ports:
+      - "5000:5000"
+    container_name: lms-web
+    networks:
+      - lms-net
+    depends_on:
+      lms-db:
+        condition: service_healthy
+
+  lms-db:
+    image: mysql:9.0
+    volumes:
+      - "./db/lms.sql:/docker-entrypoint-initdb.d/lms.sql"
+    environment: 
+      - MYSQL_ROOT_PASSWORD=sonu@123
+      - MYSQL_DATABASE=lms
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    networks:
+      - lms-net
+
+networks:
+  lms-net:

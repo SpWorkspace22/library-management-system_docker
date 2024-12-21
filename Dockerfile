@@ -1,6 +1,13 @@
-FROM python:3.14.0a3-alpine3.21
+# Stage 1: Build Stage
+FROM python:3.9-slim AS builder
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential python3-dev libffi-dev
 COPY requirements.txt requirements.txt
-RUN pip installl -r requirements.txt
-WORKDIR lms_app
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Stage 2: Final Image
+FROM python:3.9-slim
+COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
+WORKDIR /app
 COPY . .
-ENTRYPOINT ["flask","run","app.py","--host:0.0.0.0"]
+EXPOSE 5000
+ENTRYPOINT ["python3", "-m", "flask", "--app", "app.py", "run", "--host=0.0.0.0"]

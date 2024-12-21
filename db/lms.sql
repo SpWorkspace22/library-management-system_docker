@@ -96,9 +96,9 @@ CREATE TABLE `users` (
   `name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `password` varchar(1000) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `bio` longtext COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `mob` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `lock` tinyint(1) NOT NULL,
+  `bio` longtext COLLATE utf8mb4_unicode_520_ci NULL,
+  `mob` varchar(255) COLLATE utf8mb4_unicode_520_ci NULL,
+  `lock` tinyint(1) NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
