@@ -5,3 +5,4 @@ run.sh
 requirements.txt
 script.sh
 Vagrantfile
+.vagrant
